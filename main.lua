@@ -9,6 +9,8 @@
 
 debug = true
 
+pillarGap = 200
+
 -- Collision detection taken function from http://love2d.org/wiki/BoundingBox.lua
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   return x1 < x2+w2 and
@@ -19,14 +21,14 @@ end
 
 -- Important game state variables including position of bird, pillars, score, and game status
 lostGame = false
-flappyBird = {x = 250, y = 300, speed = 150, img = nil}
-pillar = {x = 600, y = 400}
+flappyBird = {x = love.window.getWidth()/2 - 50, y = 300, speed = 150, img = nil}
+pillar = {x = love.window.getWidth(), y = love.window.getHeight()/2}
 score = 0
 
 -- Draw the collision pillars
 function drawPillar()
 	love.graphics.rectangle('fill', pillar.x, 0, 50, pillar.y)
-	love.graphics.rectangle('fill', pillar.x, pillar.y + 200, 50, 800)
+	love.graphics.rectangle('fill', pillar.x, pillar.y + pillarGap, 50, love.window.getHeight())
 end
 
 -- This is called at the very beginning of the love engine when it launches
@@ -46,10 +48,10 @@ function love.update(dt)
 	if love.keyboard.isDown(' ') and lostGame then
 		love.graphics.setBackgroundColor(0, 0, 200)
 		lostGame = false
-		flappyBird.x = 250
+		flappyBird.x = love.window.getWidth()/2 - 50
 		flappyBird.y = 300
 		flappyBird.speed = 150
-		pillar = {x = 600, y = 400}
+		pillar = {x = love.window.getWidth(), y = love.window.getHeight()/2}
 		score = 0
 	end
     
@@ -59,7 +61,7 @@ function love.update(dt)
 	end
     
     -- If the bird exits the frame, the game ends
-	if flappyBird.y > 750 or flappyBird.y < 0 then
+	if flappyBird.y > love.window.getHeight() - 50 or flappyBird.y < 0 then
 		lostGame = true
 	end
 
@@ -67,7 +69,7 @@ function love.update(dt)
 	if CheckCollision(pillar.x, 0, 50, pillar.y, flappyBird.x, flappyBird.y, flappyBird.img:getWidth()*.2, flappyBird.img:getHeight()*.2) then
 		lostGame = true
 	end
-	if CheckCollision(pillar.x, pillar.y + 200, 50, 800, flappyBird.x, flappyBird.y, flappyBird.img:getWidth()*.2, flappyBird.img:getHeight()*.2) then
+	if CheckCollision(pillar.x, pillar.y + pillarGap, 50, love.window.getHeight(), flappyBird.x, flappyBird.y, flappyBird.img:getWidth()*.2, flappyBird.img:getHeight()*.2) then
 		lostGame = true
 	end
 
@@ -81,12 +83,12 @@ function love.update(dt)
 
     -- Reset the pillar if it has passed across the screen
 	if pillar.x <= 0 then
-		pillar.x = 600
-		pillar.y = 200 + love.math.random(400)
+		pillar.x = love.window.getWidth()
+		pillar.y = pillarGap + love.math.random(love.window.getHeight() - 2*pillarGap)
 	end
 
     -- When the bird crosses the pillar, the score increases
-	if pillar.x == 250 then
+	if pillar.x == love.window.getWidth()/2 - 50 then
 		score = score + 1
 	end
 
