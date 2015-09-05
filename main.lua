@@ -35,28 +35,47 @@ function love.update(dt)
 		love.event.push('quit')
 	end
 
-	if love.keyboard.isDown('up', 'w') then
-		flappyBird.speed = flappyBird.speed + 50
+	if love.keyboard.isDown(' ') and lostGame then
+		love.graphics.setBackgroundColor(0, 0, 200)
+		lostGame = false
+		flappyBird.x = 250
+		flappyBird.y = 300
+		flappyBird.speed = 150
+		pillar = {x = 600, y = 400}
+		score = 0
 	end
 
-	flappyBird.y = flappyBird.y - (flappyBird.speed*dt)
-
-	flappyBird.speed = flappyBird.speed - 20
+	if love.keyboard.isDown('up', 'w') then
+		flappyBird.speed = flappyBird.speed + 50 + score
+	end
 
 	if flappyBird.y > 750 or flappyBird.y < 0 then
 		lostGame = true
 	end
 
+	if CheckCollision(pillar.x, 0, 50, pillar.y, flappyBird.x, flappyBird.y, flappyBird.img:getWidth()*.2, flappyBird.img:getHeight()*.2) then
+		lostGame = true
+	end
+
+	if CheckCollision(pillar.x, pillar.y + 200, 50, 800, flappyBird.x, flappyBird.y, flappyBird.img:getWidth()*.2, flappyBird.img:getHeight()*.2) then
+		lostGame = true
+	end
+
     if not lostGame then
 		pillar.x = pillar.x - 5;
+	    flappyBird.y = flappyBird.y - (flappyBird.speed*dt)
+
+	   flappyBird.speed = flappyBird.speed - 20 - score
 	end 
 
 	if pillar.x <= 0 then
 		pillar.x = 600
 		pillar.y = 200 + love.math.random(400)
-		score = score + 1
 	end
 
+	if pillar.x == 250 then
+		score = score + 1
+	end
 
 end
 
@@ -69,7 +88,9 @@ function love.draw(dt)
     end
 
     if lostGame then
+    	love.graphics.setBackgroundColor(200, 0, 0)
 		love.graphics.print("Splat! Score: " .. tostring(score), 175, 300, 0, 3, 3)
+		love.graphics.print("\nPress spacebar to retry", 175, 350, 0, 2, 2)
 	end
 
 end
