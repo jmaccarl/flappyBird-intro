@@ -7,3 +7,16 @@ Use "up" key to control the bird, "escape" to quit and "spacebar" to restart
 
 More info on Love 2D Game Engine:
 https://love2d.org
+
+# To Run
+
+First clone the repo:
+```
+gh repo clone jmaccarl/flappyBird-intro
+```
+
+Then give it some love:
+```
+love flappyBird-intro
+```
+
