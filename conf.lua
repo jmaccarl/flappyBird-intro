@@ -1,8 +1,8 @@
 -- Configuration
 function love.conf(t)
-	t.title = "Tutorial" 
-	t.version = "0.9.2"   
-	t.window.width = 600   
+	t.title = "Flappy Bird"
+	t.version = "11.4"
+	t.window.width = 800
 	t.window.height = 800
 
 	-- For Windows debugging
